@@ -6,10 +6,6 @@
 package form;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Scanner;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,11 +27,10 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Mahmoud Emawi
+ * @author jit
  */
 public class Form extends Application {
-
-    private Scanner x;
+     static Scanner x;
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,13 +42,19 @@ public class Form extends Application {
 
         Scene scene = new Scene(grid, 400, 350);
 
-        scene.getStylesheets().add(Form.class.getResource("styles.css").toExternalForm());
         Text text = new Text("Welcome : ");
         Label userName = new Label("User Name : ");
         TextField nameField = new TextField();
+        nameField.setMinWidth(200);
+        nameField.setMaxWidth(200);
+        nameField.setPromptText("Enter the name here.");
         Label password = new Label("Password : ");
         PasswordField passField = new PasswordField();
-
+        passField.setMinWidth(200);
+        passField.setMaxWidth(200);
+        passField.setPromptText("Enter the password here.");
+        
+        grid.add(text, 0, 0);
         grid.add(userName, 0, 1);
         grid.add(nameField, 1, 1);
         grid.add(password, 0, 2);
@@ -87,7 +88,8 @@ public class Form extends Application {
                 hbtn4.setAlignment(Pos.CENTER);
                 hbtn4.getChildren().add(btn4);
                 grid2.add(hbtn4, 1, 3);
-
+                
+                scene2.getStylesheets().add("file:///C:/Users/jit/Documents/NetBeansProjects/Ass2/src/form/stylee.css");
                 primaryStage.setTitle("Options Page");
                 primaryStage.setScene(scene2);
                 primaryStage.show();
@@ -100,7 +102,7 @@ public class Form extends Application {
         );
         btn2.setOnAction(actionEvent -> Platform.exit());
 
-        scene.getStylesheets().add("styles.css");
+        scene.getStylesheets().add("file:///C:/Users/jit/Documents/NetBeansProjects/Ass2/src/form/stylee.css");
         primaryStage.setTitle("Login Page");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -108,7 +110,7 @@ public class Form extends Application {
 
     public void openFile() {
         try {
-            x = new Scanner(new File("C:\\Users\\jit\\Documents\\NetBeansProjects\\form\\src\\form\\user.txt"));
+            x = new Scanner(new File("user.txt"));
         } catch (Exception e) {
             System.out.println("Couldn't find file");
             System.exit(0);
@@ -117,16 +119,17 @@ public class Form extends Application {
 
     public boolean checklog(String username, String password) {
         String temp;
+        boolean result = false;
         String[] info;
-        while (x.hasNext()) {
+        while (x.hasNextLine()) {
             temp = x.nextLine();
-            info = temp.split(" ");
-            //info[0] = username, info[1] = password;
+            info = temp.split(",");
             if (info[0].equals(username) && info[1].equals(password)) {
-                return true;
+                result = true;
             }
         }
-        return false;
+        x.close(); 
+        return result;
     }
 
     /**
